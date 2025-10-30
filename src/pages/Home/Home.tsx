@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Home.css';
 import { jsPDF } from 'jspdf';
 
@@ -47,6 +47,8 @@ const Home: React.FC = () => {
       color: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)'
     }
   ];
+
+  const [certName, setCertName] = useState('');
 
   return (
     <div className="home-container">
@@ -102,22 +104,29 @@ const Home: React.FC = () => {
             <div className="feature-icon">🎓</div>
             <h3>E-Certificates</h3>
             <p>Receive digital certificates for your participation</p>
+            <input
+              type="text"
+              placeholder="Enter your name"
+              value={certName}
+              onChange={e => setCertName(e.target.value)}
+              style={{ marginBottom: '8px', padding: '6px', borderRadius: '4px', border: '1px solid #ccc' }}
+            />
             <button className="club-btn" onClick={() => {
-              // Dummy certificate data
+              const nameToUse = certName.trim() ? certName : 'John Doe';
               const doc = new jsPDF();
               doc.setFontSize(22);
               doc.text('Certificate of Participation', 20, 30);
               doc.setFontSize(16);
               doc.text('This is to certify that', 20, 50);
               doc.setFontSize(18);
-              doc.text('John Doe', 20, 60);
+              doc.text(nameToUse, 20, 60);
               doc.setFontSize(16);
               doc.text('has actively participated in', 20, 75);
               doc.text('Tech Innovators Hackathon 2025', 20, 85);
               doc.setFontSize(14);
               doc.text('Date: 30-Oct-2025', 20, 105);
               doc.text('JSS Academy of Technical Education', 20, 120);
-              doc.save('certificate.pdf');
+              doc.save(`certificate_${nameToUse.replace(/\s+/g, '_')}.pdf`);
             }}>
               Download E-Certificate
             </button>
